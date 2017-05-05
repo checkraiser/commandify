@@ -9,9 +9,10 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command.rb", "app/commands/#{class_name.underscore}_command.rb"
     template "command_spec.rb", "spec/commands/#{class_name.underscore}_command_spec.rb"
     if options[:controller]
-      template "controller.rb", "app/api/v1/#{class_name.underscore}_controller.rb"
-      inject_into_file "app/controllers/api/v1/#{class_name.underscore}_controller.rb", inject_action_controller, before: /^private/
-      inject_into_file "app/controllers//api/v1/#{class_name.underscore}_controller.rb", inject_params_controller, before: /^end/
+      template "authentication", "app/controllers/concerns/authentication.rb"
+      template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
+      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /^private/
+      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
     template "routes.rb", "config/routes.rb"
     if options[:collection]
@@ -22,6 +23,10 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   private
+
+  def resources
+    resource.pluralize
+  end
 
   def inject_action_controller
     "\tdef #{verb}\n\n\tend\n"
