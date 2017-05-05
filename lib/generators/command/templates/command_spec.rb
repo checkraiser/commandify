@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe <%= class_name %> do
+describe <%= class_name %>Command do
   subject(:context) { described_class.call(<%= "#{file_name}_params" %>) }
   
   <% kreaders.split(",").each do |reader| %>  
