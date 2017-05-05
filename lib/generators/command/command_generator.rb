@@ -30,7 +30,7 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_action_controller
-    "\tdef #{verb}\nhandle(#{file_name.camelize}Command, #{file_name}_params)\n\tend\n"
+    "\tdef #{verb}\n\t\thandle(#{file_name.camelize}Command, #{file_name}_params)\n\tend\n\n"
   end
 
   def inject_params_controller
