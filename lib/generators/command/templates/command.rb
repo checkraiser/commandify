@@ -13,12 +13,17 @@ class <%= file_name.camelize %>Command
   end
 
   def call
+    return nil unless authorized?
     return nil unless valid?
     <%= file_name %>
   end
   
 
   private
+
+  def authorized?
+    true
+  end
 
   def <%= file_name %>
     

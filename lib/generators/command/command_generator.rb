@@ -9,6 +9,7 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command.rb", "app/commands/#{file_name}_command.rb"
     template "command_spec.rb", "spec/commands/#{file_name}_command_spec.rb"
     template "routes.rb", "config/routes.rb"
+    template "command.feature", "features/#{file_name}.feature"
     if options[:controller]
       template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
       template "authentication.rb", "app/controllers/concerns/authentication.rb"
@@ -25,6 +26,14 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   private
+
+  def feature_name
+    "#{verb}.titleize #{resource.camelize}"
+  end
+
+  def intention
+    "#{verb} #{resource.camelize}"
+  end
 
   def resources
     resource.pluralize
