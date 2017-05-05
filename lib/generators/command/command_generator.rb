@@ -8,13 +8,13 @@ class CommandGenerator < Rails::Generators::NamedBase
   def create_command_file
     template "command.rb", "app/commands/#{class_name.underscore}_command.rb"
     template "command_spec.rb", "spec/commands/#{class_name.underscore}_command_spec.rb"
+    template "routes.rb", "config/routes.rb"
     if options[:controller]
-      template "authentication", "app/controllers/concerns/authentication.rb"
+      template "authentication.rb", "app/controllers/concerns/authentication.rb"
       template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /^private/
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
-    template "routes.rb", "config/routes.rb"
     if options[:collection]
       inject_into_file "config/routes.rb", "resources :#{resource.pluralize} do\n\tpost :#{verb}, on: :collection\nend\n", after: /^namespace :v1/
     else
