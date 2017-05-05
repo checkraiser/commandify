@@ -17,7 +17,7 @@ class CommandGenerator < Rails::Generators::NamedBase
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
     if options[:collection]
-      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.pluralize} do\n\t\t\t\tpost :#{verb}, on: :collection\n\t\t\tend\n\t\t\t\tend\n", after: /namespace :v1 do/
+      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.pluralize} do\n\t\t\t\tpost :#{verb}, on: :collection\n\t\t\tend\n", after: /namespace :v1 do/
     else
       inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.singlarize} do\n\t\t\t\tput :#{verb}, on: :member\n\t\t\tend\n", after: /namespace :v1 do/
     end    
