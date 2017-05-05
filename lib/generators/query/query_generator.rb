@@ -4,7 +4,7 @@ class QueryGenerator < Rails::Generators::NamedBase
 
   def create_application_query_file
     template "application_query.rb", "app/queries/application_query.rb"
-    template "application_query.rb", "app/queries/#{class_name.underscore}.rb"
+    template "query.rb", "app/queries/#{class_name.underscore}.rb"
   end
 
   private
