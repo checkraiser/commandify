@@ -1,7 +1,8 @@
-class <%= class_name %>Command
+class <%= resource.camelize %>Command
   prepend SimpleCommand
   include ActiveModel::Model
 
+  validates :current_user, presence: true
   <% kv.each do |k, v| %>
   validates <%= ":#{k}" %> <%= ", presence: true" if v %>
   <%- end -%>

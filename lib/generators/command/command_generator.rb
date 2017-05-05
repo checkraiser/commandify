@@ -6,8 +6,8 @@ class CommandGenerator < Rails::Generators::NamedBase
   class_option :controller, type: :boolean, default: false
 
   def create_command_file
-    template "command.rb", "app/commands/#{class_name.underscore}_command.rb"
-    template "command_spec.rb", "spec/commands/#{class_name.underscore}_command_spec.rb"
+    template "command.rb", "app/commands/#{resource}_command.rb"
+    template "command_spec.rb", "spec/commands/#{resource}_command_spec.rb"
     template "routes.rb", "config/routes.rb"
     if options[:controller]
       template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
@@ -17,9 +17,9 @@ class CommandGenerator < Rails::Generators::NamedBase
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
     if options[:collection]
-      inject_into_file "config/routes.rb", "resources :#{resource.pluralize} do\n\tpost :#{verb}, on: :collection\nend\n", after: /namespace :v1 do/
+      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.pluralize} do\n\t\t\t\tpost :#{verb}, on: :collection\n\t\t\tend\n", after: /namespace :v1 do/
     else
-      inject_into_file "config/routes.rb", "resources :#{resource.singlarize} do\n\tput :#{verb}, on: :member\nend\n", after: /namespace :v1 do/
+      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.singlarize} do\n\t\t\t\tput :#{verb}, on: :member\n\t\t\tend\n", after: /namespace :v1 do/
     end    
   end
 
