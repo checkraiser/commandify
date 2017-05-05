@@ -12,6 +12,7 @@ class CommandGenerator < Rails::Generators::NamedBase
     if options[:controller]
       template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
       template "authentication.rb", "app/controllers/concerns/authentication.rb"
+      template "command_handler.rb", "app/controllers/concerns/command_handler.rb"
       template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /private/
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
@@ -30,7 +31,7 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_action_controller
-    "\tdef #{verb}\n\t\thandle(#{file_name.camelize}Command, #{file_name}_params)\n\tend\n\n"
+    "def #{verb}\n\t\thandle(#{file_name.camelize}Command, #{file_name}_params)\n\tend\n\n"
   end
 
   def inject_params_controller
