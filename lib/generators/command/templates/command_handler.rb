@@ -4,9 +4,9 @@ module CommandHandler
   def handle(command, params)
     cmd = command.call(params)
     if cmd.success?
-      render json: cmd.result
+      cmd.result
     else
-      render json: cmd.errors
+      cmd.errors
     end
   end
 end
