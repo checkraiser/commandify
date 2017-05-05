@@ -10,10 +10,10 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command_spec.rb", "spec/commands/#{class_name.underscore}_command_spec.rb"
     if options[:controller]
       template "controller.rb", "app/api/v1/#{class_name.underscore}_controller.rb"
-      inject_into_file "app/api/v1/#{class_name.underscore}_controller.rb", inject_action_controller, before: /^private/
-      inject_into_file "app/api/v1/#{class_name.underscore}_controller.rb", inject_params_controller, before: /^end/
+      inject_into_file "app/controllers/api/v1/#{class_name.underscore}_controller.rb", inject_action_controller, before: /^private/
+      inject_into_file "app/controllers//api/v1/#{class_name.underscore}_controller.rb", inject_params_controller, before: /^end/
     end
-
+    template "routes.rb", "config/routes.rb"
     if options[:collection]
       inject_into_file "config/routes.rb", "resources :#{resource.pluralize} do\n\tpost :#{verb}, on: :collection\nend\n", after: /^namespace :v1/
     else
