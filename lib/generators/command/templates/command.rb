@@ -6,7 +6,8 @@ class <%= class_name %>Command
   validates <%= ":#{k}" %> <%= ", presence: true" if v %>
   <%- end -%>
 
-  def initialize(<%= kinits %>)
+  def initialize(current_user:, <%= kinits %>)
+    @current_user = current_user
     <%= declaration %>
   end
 
@@ -25,5 +26,5 @@ class <%= class_name %>Command
     nil
   end
 
-  attr_reader <%= kreaders %>
+  attr_reader :current_user, <%= kreaders %>
 end
