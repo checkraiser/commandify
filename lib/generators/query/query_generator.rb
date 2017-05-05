@@ -5,6 +5,7 @@ class QueryGenerator < Rails::Generators::NamedBase
   def create_application_query_file
     template "application_query.rb", "app/queries/application_query.rb"
     template "query.rb", "app/queries/#{class_name.underscore}.rb"
+    template "query_spec.rb", "spec/queries/#{class_name.underscore}_spec.rb"
   end
 
   private
@@ -20,7 +21,7 @@ class QueryGenerator < Rails::Generators::NamedBase
     return @params_declartion if @params_declartion
     @params_declartion = values.map do |v|
       "@#{v} = #{v}"
-    end.join("\n")
+    end.join("\n\t\t")
   end
 
   def params_assignment
