@@ -16,7 +16,7 @@ class QueryGenerator < Rails::Generators::NamedBase
     end.join(", ")
   end
 
-  def params_declartion
+  def params_declaration
     return @params_declartion if @params_declartion
     @params_declartion = values.map do |v|
       "@#{v} = #{v}"
