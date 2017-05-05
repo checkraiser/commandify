@@ -6,8 +6,8 @@ class CommandGenerator < Rails::Generators::NamedBase
   class_option :controller, type: :boolean, default: false
 
   def create_command_file
-    template "command.rb", "app/commands/#{resource}_command.rb"
-    template "command_spec.rb", "spec/commands/#{resource}_command_spec.rb"
+    template "command.rb", "app/commands/#{file_name}_command.rb"
+    template "command_spec.rb", "spec/commands/#{file_name}_command_spec.rb"
     template "routes.rb", "config/routes.rb"
     if options[:controller]
       template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
@@ -34,7 +34,7 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_params_controller
-    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders}).merge(current_user: current_user)\n\tend"
+    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders})\n\t\t.merge(current_user: current_user)\n\tend"
   end
 
   def resource

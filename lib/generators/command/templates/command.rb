@@ -1,4 +1,4 @@
-class <%= resource.camelize %>Command
+class <%= file_name.camelize %>Command
   prepend SimpleCommand
   include ActiveModel::Model
 
