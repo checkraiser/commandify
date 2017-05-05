@@ -10,7 +10,7 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command_spec.rb", "spec/commands/#{class_name.underscore}_command_spec.rb"
     template "routes.rb", "config/routes.rb"
     if options[:controller]
-      template "application_controller", "app/controllers/api/v1/application_controller.rb"
+      template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
       template "authentication.rb", "app/controllers/concerns/authentication.rb"
       template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /^private/
