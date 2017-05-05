@@ -13,7 +13,7 @@ class CommandGenerator < Rails::Generators::NamedBase
       template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
       template "authentication.rb", "app/controllers/concerns/authentication.rb"
       template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
-      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /^private/
+      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /private/
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
     if options[:collection]
@@ -30,11 +30,11 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_action_controller
-    "\tdef #{verb}\n\n\tend\n"
+    "\tdef #{verb}\nhandle(#{file_name.camelize}Command, #{file_name}_params)\n\tend\n"
   end
 
   def inject_params_controller
-    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders})\n\t\t.merge(current_user: current_user)\n\tend"
+    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders})\n\t\t.merge(current_user: current_user)\n\tend\n"
   end
 
   def resource
