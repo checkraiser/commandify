@@ -17,9 +17,9 @@ class CommandGenerator < Rails::Generators::NamedBase
       inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
     end
     if options[:collection]
-      inject_into_file "config/routes.rb", "resources :#{resource.pluralize} do\n\tpost :#{verb}, on: :collection\nend\n", after: /^namespace :v1 do/
+      inject_into_file "config/routes.rb", "resources :#{resource.pluralize} do\n\tpost :#{verb}, on: :collection\nend\n", after: /namespace :v1 do/
     else
-      inject_into_file "config/routes.rb", "resources :#{resource.singlarize} do\n\tput :#{verb}, on: :member\nend\n", after: /^namespace :v1 do/
+      inject_into_file "config/routes.rb", "resources :#{resource.singlarize} do\n\tput :#{verb}, on: :member\nend\n", after: /namespace :v1 do/
     end    
   end
 
@@ -34,12 +34,12 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_params_controller
-    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource}.permit(#{kreaders})\n\tend"
+    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders}).merge(current_user: current_user)\n\tend"
   end
 
   def resource
     return @resource if @resource
-    @resource = file_name.split("_")[1]
+    @resource = file_name.split("_")[1..-1].join("_")
   end
 
   def verb
