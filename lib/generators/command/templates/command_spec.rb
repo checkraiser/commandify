@@ -2,11 +2,7 @@ require 'rails_helper'
 
 describe Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command do
   subject(:context) { described_class.call(<%= "#{file_name}_params" %>) }
-  it { should validate_presence_of(:current_user) }
-  <% kreaders.split(",").each do |reader| %>  
-  it { should validate_presence_of(<%= reader %>) }
-  <%- end -%>
-
+  
   describe '.call' do    
     context 'when the context is successful' do
       let(<%= ":#{file_name}_params" %>) do

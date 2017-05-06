@@ -5,10 +5,10 @@ class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   validates :current_user, presence: true
   <% kv.each do |k, v| %>
   validates <%= ":#{k}" %> <%= ", #{v}: true" if v %>
-  <%- end -%>
+  <% end %>
 
   def initialize(options = { })
-    @current_user = options[:current_user] if @current_user
+    @current_user = options[:current_user]
     <%= declaration %>
   rescue => e
     errors.add <%= ":#{file_name}" %>, e.message
