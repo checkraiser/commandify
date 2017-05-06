@@ -2,7 +2,6 @@ class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   prepend SimpleCommand
   include ActiveModel::Model
 
-  validates :current_user, presence: true
   <% kv.each do |k, v| %>
   validates <%= ":#{k}" %> <%= ", #{v}: true" if v %>
   <% end %>
@@ -21,6 +20,7 @@ class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
     <%= file_name %>
   end
   
+  attr_accessor :status
 
   private
 
@@ -29,7 +29,7 @@ class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   end
 
   def <%= file_name %>
-    
+    status = 200
   rescue => e
     errors.add <%= ":#{file_name}" %>, e.message
     nil
