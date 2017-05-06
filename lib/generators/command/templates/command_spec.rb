@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe API::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
+describe API::<%= options[:version].upcase %>::<%= file_name.camelize %>Command do
   subject(:context) { described_class.call(<%= "#{file_name}_params" %>) }
   it { should validate_presence_of(:current_user) }
   <% kreaders.split(",").each do |reader| %>  
