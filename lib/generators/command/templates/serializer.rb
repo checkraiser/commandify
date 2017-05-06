@@ -1,11 +1,15 @@
 module Serializer
   extend ActiveSupport::Concern
 
-  def serialize(object, options = nil)
-    if options.present?
-      render json: object.as_json_with_includes(options)
+  def serialize(object, serializer)
+    if object[:result]
+      if object.respond_to?(:to_a?)
+        render json: object, each_serializer: serializer
+      else
+        render json: object, serializer: serializer
+      end
     else
-      render json: object
+      render json: object[:errors].as_json
     end
   end
 end

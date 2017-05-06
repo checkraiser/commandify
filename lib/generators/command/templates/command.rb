@@ -1,4 +1,4 @@
-class <%= file_name.camelize %>Command
+class API::<%= options[:version].upcase %><%= file_name.camelize %>Command
   prepend SimpleCommand
   include ActiveModel::Model
 

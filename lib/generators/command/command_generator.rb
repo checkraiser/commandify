@@ -3,30 +3,56 @@ class CommandGenerator < Rails::Generators::NamedBase
   argument :values, type: :array, :default => [], :banner => 'value1:attr1 value2:attr2 value3:attr3 etc...'
 
   class_option :collection, type: :boolean, default: false
-  class_option :controller, type: :boolean, default: false
+  class_option :version, type: :string, default: "v1"
 
   def create_command_file
-    template "command.rb", "app/commands/#{file_name}_command.rb"
-    template "command_spec.rb", "spec/commands/#{file_name}_command_spec.rb"
-    template "routes.rb", "config/routes.rb"
-    template "command.feature", "features/#{file_name}.feature"
-    if options[:controller]
-      template "application_controller.rb", "app/controllers/api/v1/application_controller.rb"
-      template "authentication.rb", "app/controllers/concerns/authentication.rb"
-      template "serializer.rb", "app/controllers/concerns/serializer.rb"
-      template "command_handler.rb", "app/controllers/concerns/command_handler.rb"
-      template "resources_controller.rb", "app/controllers/api/v1/#{resources}_controller.rb"
-      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_action_controller, before: /private/
-      inject_into_file "app/controllers/api/v1/#{resources}_controller.rb", inject_params_controller, before: /^end/
-    end
+    template "command.rb", "app/commands/api/#{options[:version]}/#{file_name}_command.rb"
+    template "command_spec.rb", "spec/commands/api/#{options[:version]}/#{file_name}_command_spec.rb"
+    inject_into_file "config/routes.rb", routes_temp, before: /^end/
+    template "command.feature", "features/API/#{options[:version]}/#{file_name}.feature"
+    template "application_controller.rb", "app/controllers/api/#{options[:version]}/application_controller.rb"
+    template "authentication.rb", "app/controllers/concerns/authentication.rb"
+    template "serializer.rb", "app/controllers/concerns/serializer.rb"
+    template "application_serializer.rb", "app/serializers/application_serializer.rb"
+    template "resource_serializer.rb", "app/serializers/api/#{options[:version]}/#{file_name}_serializer.rb"
+    template "command_handler.rb", "app/controllers/concerns/command_handler.rb"
+    template "resources_controller.rb", "app/controllers/api/#{options[:version]}/#{resources}_controller.rb"
+    inject_into_file "app/controllers/api/#{options[:version]}/#{resources}_controller.rb", inject_action_controller, before: /private/
+    inject_into_file "app/controllers/api/#{options[:version]}/#{resources}_controller.rb", inject_params_controller, before: /^end/
     if options[:collection]
-      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.pluralize} do\n\t\t\t\tpost :#{verb}, on: :collection\n\t\t\tend\n", after: /namespace :v1 do/
+      inject_into_file "config/routes.rb", inject_route_temp_collection, after: /namespace :#{options[:version]} do/
     else
-      inject_into_file "config/routes.rb", "\n\t\t\tresources :#{resource.singlarize} do\n\t\t\t\tput :#{verb}, on: :member\n\t\t\tend\n", after: /namespace :v1 do/
+      inject_into_file "config/routes.rb", inject_route_temp_member, after: /namespace :#{options[:version]} do/
     end    
   end
 
   private
+
+  def routes_temp
+    <<~HEREDOC
+      namespace :api do
+        namespace :#{options[:version]} do
+
+        end
+      end
+    HEREDOC
+  end
+
+  def inject_route_temp_collection
+    <<~HEREDOC
+      resources :#{resource.pluralize} do
+        post :#{verb}, on: :collection
+      end
+    HEREDOC
+  end
+
+  def inject_route_temp_member
+    <<~HEREDOC
+      resources :#{resource.singlarize} do
+        put :#{verb}, on: :member
+      end
+    HEREDOC
+  end
 
   def feature_name
     "#{verb.titleize} #{resource.camelize}"
@@ -41,11 +67,23 @@ class CommandGenerator < Rails::Generators::NamedBase
   end
 
   def inject_action_controller
-    "def #{verb}\n\t\tserialize(handle(#{file_name.camelize}Command, #{file_name}_params))\n\tend\n\n"
+    <<~HEREDOC
+      def #{verb}
+        serialize(
+          handle(API::#{options[:version]}::#{file_name.camelize}Command, #{file_name}_params), API::#{options[:version]}::#{file_name}Serializer
+        )          
+      end
+    HEREDOC
   end
 
   def inject_params_controller
-    "\tdef #{file_name}_params\n\t\tparams.require(:#{resource})\n\t\t.permit(#{kreaders})\n\t\t.merge(current_user: current_user)\n\tend\n"
+    <<~HEREDOC
+      def #{file_name}_params
+        params.require(:#{resource})
+              .permit(#{kreaders})
+              .merge(current_user: current_user)
+      end
+    HEREDOC
   end
 
   def resource

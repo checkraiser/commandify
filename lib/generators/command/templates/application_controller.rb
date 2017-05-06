@@ -1,4 +1,4 @@
-class Api::V1::ApplicationController < ApplicationController
+class Api::<%= options[:version].upcase %>::ApplicationController < ApplicationController
   include Authentication
   include Serializer
   include CommandHandler

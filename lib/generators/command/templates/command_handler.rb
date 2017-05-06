@@ -4,9 +4,9 @@ module CommandHandler
   def handle(command, params)
     cmd = command.call(params)
     if cmd.success?
-      cmd.result
+      { result: cmd.result }
     else
-      cmd.errors
+      { errors: cmd.errors }
     end
   end
 end
