@@ -7,7 +7,7 @@ class API::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   validates <%= ":#{k}" %> <%= ", presence: true" if v %>
   <%- end -%>
 
-  def initialize(current_user:, <%= kinits %>)
+  def initialize(current_user: nil, <%= kinits %>)
     @current_user = current_user
     <%= declaration %>
   end

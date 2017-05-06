@@ -132,7 +132,7 @@ class CommandGenerator < Rails::Generators::NamedBase
 
   def kinits
     return @kinits if @kinits
-    keys.map { |i| "#{i}:"}.join(", ")
+    keys.map { |i| "#{i}: nil"}.join(", ")
   end
 
   def kreaders
