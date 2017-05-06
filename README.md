@@ -13,7 +13,11 @@ HTTP request -> Authentication -> Command -> CommandHandler -> Serializer
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'commandify'
+gem 'active_model_serializer'
+gem 'faker', group: [:development, :test]
+gem 'spinach', group: :test
+gem 'simple_command'
+gem 'commandify', group: [:development, :test]
 ```
 
 And then execute:
