@@ -18,7 +18,7 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command_handler.rb", "app/controllers/concerns/command_handler.rb"
     template "resources_controller.rb", "app/controllers/api/#{options[:version]}/#{resources}_controller.rb"
     inject_into_file "app/controllers/api/#{options[:version]}/#{resources}_controller.rb", inject_action_controller, before: /private/
-    inject_into_file "app/controllers/api/#{options[:version]}/#{resources}_controller.rb", inject_params_controller, before: /^end/
+    inject_into_file "app/controllers/api/#{options[:version]}/#{resources}_controller.rb", inject_params_controller, after: /private/
     if options[:collection]
       inject_into_file "config/routes.rb", inject_route_temp_collection, after: /namespace :#{options[:version]} do/
     else
@@ -44,7 +44,7 @@ class CommandGenerator < Rails::Generators::NamedBase
       resources :#{resource.pluralize} do
         post :#{verb}, on: :collection
       end
-      
+
     HEREDOC
   end
 
