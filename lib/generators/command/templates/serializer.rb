@@ -9,7 +9,7 @@ module Serializer
         render json: object, serializer: serializer
       end
     else
-      render json: object[:errors].as_json
+      render json: { errors: object[:errors].as_json }
     end
   end
 end
