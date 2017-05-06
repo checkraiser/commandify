@@ -9,7 +9,7 @@ class CommandGenerator < Rails::Generators::NamedBase
     template "command.rb", "app/commands/api/#{options[:version]}/#{file_name}_command.rb"
     template "command_spec.rb", "spec/commands/api/#{options[:version]}/#{file_name}_command_spec.rb"
     inject_into_file "config/routes.rb", routes_temp, before: /^end/
-    template "command.feature", "features/API/#{options[:version]}/#{file_name}.feature"
+    template "command.feature", "features/api/#{options[:version]}/#{file_name}.feature"
     template "application_controller.rb", "app/controllers/api/#{options[:version]}/application_controller.rb"
     template "authentication.rb", "app/controllers/concerns/authentication.rb"
     template "serializer.rb", "app/controllers/concerns/serializer.rb"
@@ -40,17 +40,21 @@ class CommandGenerator < Rails::Generators::NamedBase
 
   def inject_route_temp_collection
     <<~HEREDOC
+
       resources :#{resource.pluralize} do
         post :#{verb}, on: :collection
       end
+      
     HEREDOC
   end
 
   def inject_route_temp_member
     <<~HEREDOC
+
       resources :#{resource.singlarize} do
         put :#{verb}, on: :member
       end
+
     HEREDOC
   end
 
@@ -68,21 +72,25 @@ class CommandGenerator < Rails::Generators::NamedBase
 
   def inject_action_controller
     <<~HEREDOC
+
       def #{verb}
         serialize(
-          handle(API::#{options[:version]}::#{file_name.camelize}Command, #{file_name}_params), API::#{options[:version]}::#{file_name}Serializer
+          handle(Api::#{options[:version].upcase}::#{file_name.camelize}Command, #{file_name}_params), Api::#{options[:version].upcase}::#{file_name.camelize}Serializer
         )          
       end
+
     HEREDOC
   end
 
   def inject_params_controller
     <<~HEREDOC
+
       def #{file_name}_params
         params.require(:#{resource})
               .permit(#{kreaders})
               .merge(current_user: current_user)
       end
+
     HEREDOC
   end
 
