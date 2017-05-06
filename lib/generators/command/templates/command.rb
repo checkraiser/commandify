@@ -1,10 +1,10 @@
-class API::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
+class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   prepend SimpleCommand
   include ActiveModel::Model
 
   validates :current_user, presence: true
   <% kv.each do |k, v| %>
-  validates <%= ":#{k}" %> <%= ", presence: true" if v %>
+  validates <%= ":#{k}" %> <%= ", #{v}: true" if v %>
   <%- end -%>
 
   def initialize(current_user: nil, <%= kinits %>)
