@@ -1,3 +1,3 @@
-class Api::<%= options[:version].upcase %>::<%= resource.camelize.pluralize %>Serializer < ApplicationSerializer
+class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Serializer < ApplicationSerializer
   attributes <%= kreaders %>
 end
