@@ -6,6 +6,9 @@ class CommandGenerator < Rails::Generators::NamedBase
   class_option :version, type: :string, default: "v1"
 
   def create_command_file
+    template "env.rb", "features/support/env.rb"
+    template "faker.rb", "features/steps/common/faker.rb"
+    template "helper.rb", "features/steps/common/helper.rb"
     template "command.rb", "app/commands/api/#{options[:version]}/#{file_name}_command.rb"
     template "command_spec.rb", "spec/commands/api/#{options[:version]}/#{file_name}_command_spec.rb"
     inject_into_file "config/routes.rb", routes_temp, before: /^end/
