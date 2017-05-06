@@ -7,9 +7,12 @@ class Api::<%= options[:version].upcase %>::<%= file_name.camelize %>Command
   validates <%= ":#{k}" %> <%= ", #{v}: true" if v %>
   <%- end -%>
 
-  def initialize(current_user: nil, <%= kinits %>)
-    @current_user = current_user
+  def initialize(options = { })
+    @current_user = options[:current_user] if @current_user
     <%= declaration %>
+  rescue => e
+    errors.add <%= ":#{file_name}" %>, e.message
+    nil
   end
 
   def call

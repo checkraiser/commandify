@@ -106,7 +106,7 @@ class CommandGenerator < Rails::Generators::NamedBase
 
   def declaration
     keys.map do |key|
-      "@#{key} = #{key}"
+      "@#{key} = options[:#{key}] if options[:#{key}]"
     end.join("\n\t\t")
   end
 
